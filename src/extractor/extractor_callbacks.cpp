@@ -32,7 +32,6 @@ ExtractorCallbacks::ExtractorCallbacks(ExtractionContainers &extraction_containe
 {
     // we reserved 0, 1, 2 for the empty case
     string_map[MapKey("", "")] = 0;
-    lane_map[""] = 0;
 }
 
 /**
@@ -147,38 +146,6 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
     // Deduplicates street names and street destination names based on the street_map map.
     // In case we do not already store the name, inserts (name, id) tuple and return id.
     // Otherwise fetches the id based on the name and returns it without insertion.
-
-    const constexpr auto MAX_STRING_LENGTH = 255u;
-    const auto requestId = [this, MAX_STRING_LENGTH](const std::string &turn_lane_string_) {
-        if (turn_lane_string_ == "")
-            return INVALID_LANE_STRINGID;
-
-        // requires https://github.com/cucumber/cucumber-js/issues/417
-        // remove this handling when the issue is contained
-        std::string turn_lane_string = turn_lane_string_;
-        for (auto &val : turn_lane_string)
-            if (val == '&')
-                val = '|';
-
-        const auto &lane_map_iterator = lane_map.find(turn_lane_string);
-        if (lane_map.end() == lane_map_iterator)
-        {
-            LaneStringID turn_lane_id =
-                boost::numeric_cast<LaneStringID>(external_memory.turn_lane_lengths.size());
-            auto turn_lane_length = std::min<unsigned>(MAX_STRING_LENGTH, turn_lane_string.size());
-            std::copy(turn_lane_string.c_str(),
-                      turn_lane_string.c_str() + turn_lane_length,
-                      std::back_inserter(external_memory.turn_lane_char_data));
-            external_memory.turn_lane_lengths.push_back(turn_lane_length);
-            lane_map.insert(std::make_pair(turn_lane_string, turn_lane_id));
-            return turn_lane_id;
-        }
-        else
-        {
-            return lane_map_iterator->second;
-        }
-    };
-
     const auto turn_lane_id_forward = requestId(parsed_way.turn_lanes_forward);
     const auto turn_lane_id_backward = requestId(parsed_way.turn_lanes_backward);
 

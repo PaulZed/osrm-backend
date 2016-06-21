@@ -1,4 +1,3 @@
-#include "storage/storage.hpp"
 #include "contractor/query_edge.hpp"
 #include "extractor/compressed_edge_container.hpp"
 #include "extractor/guidance/turn_instruction.hpp"
@@ -9,6 +8,7 @@
 #include "storage/shared_barriers.hpp"
 #include "storage/shared_datatype.hpp"
 #include "storage/shared_memory.hpp"
+#include "storage/storage.hpp"
 #include "engine/datafacade/datafacade_base.hpp"
 #include "util/coordinate.hpp"
 #include "util/exception.hpp"
@@ -457,7 +457,7 @@ int Storage::Run()
     unsigned temp_length = 0;
     name_stream.read((char *)&temp_length, sizeof(unsigned));
 
-    BOOST_ASSERT_MSG(shared_layout_ptr->AlignBlockSize(temp_length) <=
+    BOOST_ASSERT_MSG(shared_layout_ptr->AlignBlockSize(temp_length) ==
                          shared_layout_ptr->GetBlockSize(SharedDataLayout::NAME_CHAR_LIST),
                      "Name file corrupted!");
 
@@ -503,7 +503,7 @@ int Storage::Run()
         shared_memory_ptr, SharedDataLayout::TURN_STRING_CHAR_LIST);
     turn_string_stream.read((char *)&turn_string_temp_length, sizeof(unsigned));
 
-    BOOST_ASSERT_MSG(turn_string_temp_length <=
+    BOOST_ASSERT_MSG(shared_layout_ptr->AlignBlockSize(turn_string_temp_length) ==
                          shared_layout_ptr->GetBlockSize(SharedDataLayout::TURN_STRING_CHAR_LIST),
                      "turn string file corrupted!");
 
