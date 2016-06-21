@@ -87,12 +87,12 @@ util::json::Array lanesFromManeuver(const guidance::StepManeuver &maneuver)
     {
         --lane_id;
         util::json::Object lane;
-        lane.values["marked"] = (iter->empty() ? "none" : *iter);
+        lane.values["indication"] = (iter->empty() ? "none" : *iter);
         if (lane_id >= maneuver.lanes.first_lane_from_the_right &&
             lane_id < maneuver.lanes.first_lane_from_the_right + maneuver.lanes.lanes_in_turn)
-            lane.values["take"] = util::json::True();
+            lane.values["valid"] = util::json::True();
         else
-            lane.values["take"] = util::json::False();
+            lane.values["valid"] = util::json::False();
 
         result.values.push_back(lane);
     }

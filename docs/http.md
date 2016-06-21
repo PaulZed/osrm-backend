@@ -437,16 +437,11 @@ step.
   | geojson    | [GeoJSON `LineString`](http://geojson.org/geojson-spec.html#linestring) or [GeoJSON `Point`](http://geojson.org/geojson-spec.html#point) if it is only one coordinate (not wrapped by a GeoJSON feature)|
   
 - `name`: The name of the way along which travel proceeds.
-- `lanes`: the available turn lanes at the turn
-  - `marked`: markings on the road, following the OSM scheme (e.g. left, slight_right, or through)
-  - `take`: a boolean flag indicating whether the lane is a possible choice in the maneuver
 - `pronunciation`: The pronunciation hint of the way name. Will be `undefined` if there is no pronunciation hit.
 - `destinations`: The destinations of the way. Will be `undefined` if there are no destinations.
 - `mode`: A string signifying the mode of transportation.
 - `maneuver`: A `StepManeuver` object representing the maneuver.
 - `intersections`: A list of `Intersections` that are passed along the segment, the very first belonging to the StepManeuver
-
-Currently, the supported lane tags are: `sharp_left, left, slight_left, sharp_right, right, slight_right, through, reverse, none`.
 
 #### Example
 
@@ -455,16 +450,15 @@ Currently, the supported lane tags are: `sharp_left, left, slight_left, sharp_ri
  "distance":152.3,
  "duration":15.6,
  "name":"Lortzingstraße",
- "lanes":{
-     {"marked":"left",
-     "take":"false"},
-     {"marked":"right",
-     "take":"true"}
- },
  "maneuver":{
      "type":"turn",
-     "modifier":"right"
- },
+     "modifier":"right",
+     "lanes":[
+         {"indication":"left",
+         "valid":"false"},
+         {"indication":"right",
+         "valid":"true"}
+     ]},
  "geometry":"{lu_IypwpAVrAvAdI",
  "mode":"driving",
  "intersections":[
@@ -493,6 +487,13 @@ Currently, the supported lane tags are: `sharp_left, left, slight_left, sharp_ri
   direction of travel immediately after the maneuver.
 - `type` A string indicating the type of maneuver. **new identifiers might be introduced without API change**
    Types  unknown to the client should be handled like the `turn` type, the existance of correct `modifier` values is guranteed.
+- `lanes`: the available turn lanes at the turn
+  - `indication`: markings on the road, following the OSM scheme (e.g. left, slight_right, or through). Markings mey be combined into a list separated by ';'.
+  - `valid`: a boolean flag indicating whether the lane is a valid choice in the maneuver
+
+Currently, the supported lane tags are: `sharp_left, left, slight_left, sharp_right, right, slight_right, through, reverse, none`.
+See the [OSM wiki](http://wiki.openstreetmap.org/wiki/Key:turn) for their usage.
+
   
   | `type`            | Description                                                  |
   |-------------------|--------------------------------------------------------------|
