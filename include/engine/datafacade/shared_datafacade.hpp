@@ -839,24 +839,9 @@ class SharedDataFacade final : public BaseDataFacade
         return m_lane_tupel_id_pairs.at(m_lane_data_id.at(id));
     }
 
-    std::string GetTurnStringForID(const LaneStringID lane_string_id) const override final
+    extractor::guidance::TurnLaneDescription GetTurnDescription(const LaneDescriptionID lane_description_id) const override final
     {
-        if (INVALID_LANE_STRINGID == lane_string_id)
-        {
-            return "";
-        }
-        auto range = m_turn_string_table->GetRange(lane_string_id);
-
-        std::string result;
-        result.reserve(range.size());
-        if (range.begin() != range.end())
-        {
-            result.resize(range.back() - range.front() + 1);
-            std::copy(m_turn_string_char_list.begin() + range.front(),
-                      m_turn_string_char_list.begin() + range.back() + 1,
-                      result.begin());
-        }
-        return result;
+        return {};
     }
 };
 }

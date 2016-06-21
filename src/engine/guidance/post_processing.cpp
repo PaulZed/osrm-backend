@@ -848,7 +848,7 @@ void trimShortSegments(std::vector<RouteStep> &steps, LegGeometry &geometry)
             // we need to make this conform with the intersection format for the first intersection
             auto &first_intersection = designated_depart.intersections.front();
             designated_depart.maneuver.lanes = util::guidance::LaneTupel();
-            designated_depart.maneuver.turn_lane_string = "";
+            designated_depart.maneuver.lane_description.clear();
             first_intersection.bearings = {first_intersection.bearings[first_intersection.out]};
             first_intersection.entry = {true};
             first_intersection.in = Intersection::NO_INDEX;
@@ -916,7 +916,7 @@ void trimShortSegments(std::vector<RouteStep> &steps, LegGeometry &geometry)
         next_to_last_step.maneuver.instruction = TurnInstruction::NO_TURN();
         next_to_last_step.maneuver.bearing_after = 0;
         next_to_last_step.maneuver.lanes = util::guidance::LaneTupel();
-        next_to_last_step.maneuver.turn_lane_string = "";
+        next_to_last_step.maneuver.lane_description.clear();
         BOOST_ASSERT(next_to_last_step.intersections.size() == 1);
         auto &last_intersection = next_to_last_step.intersections.back();
         last_intersection.bearings = {last_intersection.bearings[last_intersection.in]};

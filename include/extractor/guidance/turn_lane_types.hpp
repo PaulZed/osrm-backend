@@ -23,7 +23,8 @@ namespace TurnLaneType
 namespace detail
 {
 const constexpr std::size_t num_supported_lane_types = 11;
-}
+} // namespace detail
+
 typedef std::uint16_t Mask;
 const constexpr Mask empty = 0;
 const constexpr Mask none = 1 << 0;
@@ -44,22 +45,22 @@ inline std::string toString(Mask lane_type)
         return "none";
 
     std::bitset<4 * sizeof(Mask)> mask(lane_type);
-    const constexpr char *translations[num_supported_lane_types] = {"none",
-                                                                    "through",
-                                                                    "sharp left",
-                                                                    "left",
-                                                                    "slight left",
-                                                                    "slight right",
-                                                                    "right",
-                                                                    "sharp right",
-                                                                    "reverse",
-                                                                    "merge to left",
-                                                                    "merge to right"};
+    const constexpr char *translations[detail::num_supported_lane_types] = {"none",
+                                                                            "through",
+                                                                            "sharp left",
+                                                                            "left",
+                                                                            "slight left",
+                                                                            "slight right",
+                                                                            "right",
+                                                                            "sharp right",
+                                                                            "reverse",
+                                                                            "merge to left",
+                                                                            "merge to right"};
 
     std::string result = "";
-    for (std::size_t lane_id_nr = 0; lane_id_nr < num_supported_lane_types; ++lane_id_nr)
-        if( mask[lane_id_nr] )
-            result += result.empty() ? translations[lane_id_nr] : (";" + translations[lane_id_nr]);
+    for (std::size_t lane_id_nr = 0; lane_id_nr < detail::num_supported_lane_types; ++lane_id_nr)
+        if (mask[lane_id_nr])
+            result += result.empty() ? translations[lane_id_nr] : (std::string(";") + translations[lane_id_nr]);
 
     return result;
 }
@@ -71,4 +72,4 @@ typedef std::vector<TurnLaneType::Mask> TurnLaneDescription;
 } // extractor
 } // osrm
 
-/* OSRM_GUIDANCE_TURN_LANE_TYPES_HPP_ */
+#endif /* OSRM_GUIDANCE_TURN_LANE_TYPES_HPP_ */
