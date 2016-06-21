@@ -2,6 +2,10 @@
 #define OSRM_ENGINE_GUIDANCE_DEBUG_HPP_
 
 #include "engine/guidance/route_step.hpp"
+#include "extractor/guidance/lane_data.hpp"
+#include "extractor/guidance/intersection.hpp"
+#include "extractor/query_node.hpp"
+#include "util/typedefs.hpp"
 
 #include <iostream>
 #include <vector>
@@ -10,7 +14,9 @@ namespace osrm
 {
 namespace util
 {
-inline void print(const RouteStep &step)
+namespace guidance
+{
+inline void print(const engine::guidance::RouteStep &step)
 {
     std::cout << static_cast<int>(step.maneuver.instruction.type) << " "
               << static_cast<int>(step.maneuver.instruction.direction_modifier) << "  "
@@ -32,7 +38,7 @@ inline void print(const RouteStep &step)
     std::cout << "] name[" << step.name_id << "]: " << step.name;
 }
 
-inline void print(const std::vector<RouteStep> &steps)
+inline void print(const std::vector<engine::guidance::RouteStep> &steps)
 {
     std::cout << "Path\n";
     int segment = 0;
@@ -44,7 +50,7 @@ inline void print(const std::vector<RouteStep> &steps)
     }
 }
 
-inline void print(const LaneDataVector &turn_lane_data)
+inline void print(const extractor::guidance::LaneDataVector &turn_lane_data)
 {
     std::cout << " Tags:\n";
     for (auto entry : turn_lane_data)
@@ -54,9 +60,9 @@ inline void print(const LaneDataVector &turn_lane_data)
 }
 
 inline void printTurnAssignmentData(const NodeID at,
-                                    const LaneDataVector &turn_lane_data,
-                                    const Intersection &intersection,
-                                    const std::vector<QueryNode> &node_info_list)
+                                    const extractor::guidance::LaneDataVector &turn_lane_data,
+                                    const extractor::guidance::Intersection &intersection,
+                                    const std::vector<extractor::QueryNode> &node_info_list)
 {
     std::cout << "[Turn Assignment Progress]\nLocation:";
     auto coordinate = node_info_list[at];
@@ -71,6 +77,7 @@ inline void printTurnAssignmentData(const NodeID at,
     print(turn_lane_data);
 }
 
+} // namespace guidance
 } // namespace util
 } // namespace osrm
 

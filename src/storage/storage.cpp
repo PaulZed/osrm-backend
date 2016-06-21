@@ -454,10 +454,10 @@ int Storage::Run()
 
     char *name_char_ptr = shared_layout_ptr->GetBlockPtr<char, true>(
         shared_memory_ptr, SharedDataLayout::NAME_CHAR_LIST);
-    unsigned temp_length;
+    unsigned temp_length = 0;
     name_stream.read((char *)&temp_length, sizeof(unsigned));
 
-    BOOST_ASSERT_MSG(shared_layout_ptr->AlignBlockSize(temp_length) ==
+    BOOST_ASSERT_MSG(shared_layout_ptr->AlignBlockSize(temp_length) <=
                          shared_layout_ptr->GetBlockSize(SharedDataLayout::NAME_CHAR_LIST),
                      "Name file corrupted!");
 
@@ -498,11 +498,12 @@ int Storage::Run()
             shared_layout_ptr->GetBlockSize(SharedDataLayout::TURN_STRING_BLOCKS));
     }
 
+    unsigned turn_string_temp_length = 0;
     char *turn_string_char_ptr = shared_layout_ptr->GetBlockPtr<char, true>(
         shared_memory_ptr, SharedDataLayout::TURN_STRING_CHAR_LIST);
-    turn_string_stream.read((char *)&temp_length, sizeof(unsigned));
+    turn_string_stream.read((char *)&turn_string_temp_length, sizeof(unsigned));
 
-    BOOST_ASSERT_MSG(temp_length ==
+    BOOST_ASSERT_MSG(turn_string_temp_length <=
                          shared_layout_ptr->GetBlockSize(SharedDataLayout::TURN_STRING_CHAR_LIST),
                      "turn string file corrupted!");
 
@@ -595,7 +596,7 @@ int Storage::Run()
     {
         util::SimpleLogger().Write()
             << "Copying " << (m_datasource_name_data.end() - m_datasource_name_data.begin())
-            << " chars into name data ptr\n";
+            << " chars into name data ptr";
         std::copy(
             m_datasource_name_data.begin(), m_datasource_name_data.end(), datasource_name_data_ptr);
     }
